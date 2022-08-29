@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from telegram.error import TelegramError
 
 from exceptions import (AccessStatusError, EmptyHWList, RequestError,
-                        SendingError)
+                        SendError)
 
 load_dotenv()
 
@@ -32,18 +32,16 @@ HOMEWORK_STATUSES = {
 
 
 def send_message(bot, message):
-    """Функция для отправки сообщений в Telegram-чат."""
     try:
         bot.send_message(TELEGRAM_CHAT_ID, message)
         logger.info('Удачная отправка сообщения!')
     except TelegramError as error:
-        raise SendingError(
+        raise Send(
             f'Неудачная отправка сообщения! {error}'
         )
 
 
 def get_api_answer(current_timestamp):
-    """Функция для создания запроса к эндпоинту API-сервиса."""
     timestamp = current_timestamp or int(time.time())
     params = {'from_date': timestamp}
     try:
@@ -64,7 +62,6 @@ def get_api_answer(current_timestamp):
 
 
 def check_response(response):
-    """Функция проверки ответа API на корректность."""
     if not isinstance(response, dict):
         raise TypeError('Ответ не совпадает со словарем')
     if 'homeworks' not in response.keys():
@@ -78,7 +75,6 @@ def check_response(response):
 
 
 def parse_status(homework):
-    """Функция извлекает статус конкретной ДЗ."""
     if 'homework_name' not in homework:
         raise KeyError('Отсутствует ключ homework_name')
     if 'status' not in homework:
@@ -92,13 +88,11 @@ def parse_status(homework):
 
 
 def check_tokens():
-    """Функция проверяет доступность переменных окружения."""
     if all([PRACTICUM_TOKEN, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID]):
         return True
 
 
 def main():
-    """Основная логика работы бота."""
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = int(time.time())
     status = ''
@@ -113,7 +107,7 @@ def main():
             if message != status:
                 send_message(bot, message)
                 status = message
-        except SendingError as error:
+        except SendError as error:
             logger.error(
                 f'Неудачная отправка сообщения! {error}'
             )

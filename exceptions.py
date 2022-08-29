@@ -3,6 +3,10 @@ class AccessStatusError(Exception):
 
     pass
 
+class RequestError(Exception):
+    """Исключение в запросе API."""
+
+    pass
 
 class EmptyHWList(Exception):
     """Ошибка списка ДЗ."""
@@ -10,13 +14,7 @@ class EmptyHWList(Exception):
     pass
 
 
-class RequestError(Exception):
-    """Исключение в запросе API."""
-
-    pass
-
-
-class SendingError(Exception):
-    """Ошибка при отправке сообщения."""
+class SendError(Exception):
+    """Ошибка отправки сообщения."""
 
     pass
