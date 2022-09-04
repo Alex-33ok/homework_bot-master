@@ -6,13 +6,13 @@ from logging.handlers import RotatingFileHandler
 
 import requests
 import telegram
-from dotenv import load_dotenv
+from dotenv import load_dotenv as ld2
 from telegram.error import TelegramError
 
 from exceptions import (AccessStatusError, EmptyHWList, RequestError,
                         SendError)
 
-load_dotenv()
+ld2()
 
 PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
